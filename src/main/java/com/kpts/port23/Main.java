@@ -60,15 +60,40 @@ public class Main {
 		
 		if(itemList.size()>0)
 		{
+			System.out.println("File uploaded....");
+			int lineNo = 1;
 			for (Map<String,String> item : itemList) {
 				
-				for(Map.Entry<String, String> lineItem : item.entrySet())
+				Product product = new 
+						Product(item.get("SECURITY_SCHEME")+","+item.get("SECURITY_VALUE"),
+								item.get("SECURITY_SCHEME")+","+item.get("ISSUER_VALUE"),
+								Long.valueOf(item.get("QUANTITY").replace("L", "")),
+								Double.valueOf(item.get("NOTIONAL")),
+								Double.valueOf(item.get("FIXED_RATE")),
+								item.get("START_DATE"),
+								item.get("END_DATE"),
+								item.get("SETTLEMENT"),
+								Double.valueOf(item.get("CLEAN_PRICE")),
+								item.get("VAL_DATE")
+								);
+				
+				int loopSize = Integer.valueOf(item.get("Loops"));
+				
+				System.out.println("Loop size is "+loopSize);
+				
+				for(int i = 0;i<loopSize;i++)
 				{
-					System.out.println(lineItem.getKey()+" : "+lineItem.getValue());
+					System.out.println("For row - "+lineNo+" running count - "+(i+1));
+					product.calculatePresentValue();					
+					System.out.println("\n");	
 				}
 				
+				lineNo++;
 				System.out.println("\n");	
+				
 			}
+			
+			
 			
 			
 		}
