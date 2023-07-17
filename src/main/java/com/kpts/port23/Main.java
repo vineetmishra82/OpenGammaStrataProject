@@ -160,11 +160,7 @@ public class Main {
 		}
 	
 		 
-		 long end =  System.currentTimeMillis();
-		 
-		 System.out.println("\n\nTotal time(only process not file reading/writing) -> "+(end-start)+" milliseconds\n");
-		
-		
+				
 		//Writing to file
 		System.out.println("Result data being written to a file...");
 		BufferedWriter buff;
@@ -175,6 +171,11 @@ public class Main {
 		buff.write(data.toString());
 		
 		System.out.println("Result data written to file -> resultData.txt");
+		
+		long end =  System.currentTimeMillis();
+		 
+		 System.out.println("\n\nTotal time(only process and file writing not reading) -> "+(end-start)+" milliseconds\n");
+		
 		
 		buff.close();
 		} catch (IOException e) {
