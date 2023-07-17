@@ -10,13 +10,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import uk.ac.manchester.tornado.api.ImmutableTaskGraph;
+import uk.ac.manchester.tornado.api.TaskGraph;
+import uk.ac.manchester.tornado.api.TornadoExecutionPlan;
+import uk.ac.manchester.tornado.api.TornadoExecutionResult;
+import uk.ac.manchester.tornado.api.annotations.Parallel;
+import uk.ac.manchester.tornado.api.enums.DataTransferMode;
+
 public class Main {
 	
 	static List<String> headers = new ArrayList<String>();
-	static List<Map<String,String>> itemList = new ArrayList<Map<String,String>>();
+	
 
 	public static void main(String[] args) {
 
+	List<Map<String,String>> itemList = new ArrayList<Map<String,String>>();
 	System.out.println("Running strata project");
 	
 	try {
@@ -62,51 +70,18 @@ public class Main {
 		
 		if(itemList.size()>0)
 		{
-			System.out.println("File uploaded....");
-			int lineNo = 1;
-			StringBuilder data = new StringBuilder("");
-			for (Map<String,String> item : itemList) {
 				
-				Product product = new 
-						Product(item.get("SECURITY_SCHEME")+","+item.get("SECURITY_VALUE"),
-								item.get("SECURITY_SCHEME")+","+item.get("ISSUER_VALUE"),
-								Long.valueOf(item.get("QUANTITY").replace("L", "")),
-								Double.valueOf(item.get("NOTIONAL")),
-								Double.valueOf(item.get("FIXED_RATE")),
-								item.get("START_DATE"),
-								item.get("END_DATE"),
-								item.get("SETTLEMENT"),
-								Double.valueOf(item.get("CLEAN_PRICE")),
-								item.get("VAL_DATE")
-								);
-				
-				int loopSize = Integer.valueOf(item.get("Loops"));
-				
-				System.out.println("Loop size is "+loopSize);
-				
-				
-				
-				for(int i = 0;i<loopSize;i++)
-				{
-					data.append("\nFor row - "+lineNo+" running count - "+(i+1));
-					data.append(product.calculatePresentValue());					
-					data.append("\n");	
-				}
-				
-				lineNo++;
-				data.append("\n");	
-				
-			}
-		
-			//Writing to file
-			System.out.println("Result data being written to a file...");
-			BufferedWriter buff = new BufferedWriter(new FileWriter("resultData.txt"));
+			TaskGraph taskGraph = new TaskGraph("s0")
+			.task("t0",Main::ProcessComputationOfData,itemList);
 			
-			buff.write(data.toString());
-			
-			System.out.println("Result data written to file -> resultData.txt");
-			
-			buff.close();
+			 // Create an immutable task-graph
+	        ImmutableTaskGraph immutableTaskGraph = taskGraph.snapshot();
+
+	        // Create an execution plan from an immutable task-graph
+	        TornadoExecutionPlan executionPlan = new TornadoExecutionPlan(immutableTaskGraph);
+
+	        // Execute the execution plan
+	        TornadoExecutionResult executionResult = executionPlan.execute();
 			
 		}
 		
@@ -121,6 +96,62 @@ public class Main {
 	System.out.println("File reading error - "+e.getLocalizedMessage());
 	}
 
+	}
+
+	private static void ProcessComputationOfData(List<Map<String, String>> itemList) {
+		System.out.println("File uploaded....");
+		int lineNo = 1;
+		StringBuilder data = new StringBuilder("");
+		for (@Parallel Map<String,String> item : itemList) {
+			
+			Product product = new 
+					Product(item.get("SECURITY_SCHEME")+","+item.get("SECURITY_VALUE"),
+							item.get("SECURITY_SCHEME")+","+item.get("ISSUER_VALUE"),
+							Long.valueOf(item.get("QUANTITY").replace("L", "")),
+							Double.valueOf(item.get("NOTIONAL")),
+							Double.valueOf(item.get("FIXED_RATE")),
+							item.get("START_DATE"),
+							item.get("END_DATE"),
+							item.get("SETTLEMENT"),
+							Double.valueOf(item.get("CLEAN_PRICE")),
+							item.get("VAL_DATE")
+							);
+			
+			int loopSize = Integer.valueOf(item.get("Loops"));
+			
+			System.out.println("Loop size is "+loopSize);
+			
+			
+			
+			for(@Parallel int i = 0;i<loopSize;i++)
+			{
+				data.append("\nFor row - "+lineNo+" running count - "+(i+1));
+				data.append(product.calculatePresentValue());					
+				data.append("\n");	
+			}
+			
+			lineNo++;
+			data.append("\n");	
+			
+		}
+	
+		//Writing to file
+		System.out.println("Result data being written to a file...");
+		BufferedWriter buff;
+		try {
+			buff = new BufferedWriter(new FileWriter("resultData.txt"));
+		
+		
+		buff.write(data.toString());
+		
+		System.out.println("Result data written to file -> resultData.txt");
+		
+		buff.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }
