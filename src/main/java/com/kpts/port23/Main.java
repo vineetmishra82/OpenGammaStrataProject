@@ -31,7 +31,7 @@ public class Main {
 	try {
 		FileReader fileReader = new FileReader(args[0]);
 		
-		if(!args[1].equals(null))
+		if(args.length==2)
 		{
 			loopCount = Double.valueOf(args[1]);
 			System.out.println("Per row loop count is "+loopCount);
