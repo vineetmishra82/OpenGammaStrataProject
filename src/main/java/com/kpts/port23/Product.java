@@ -171,16 +171,19 @@ public class Product {
 		return SecurityId.of(values[0],values[1]);
 	}
 	
-	public void calculatePresentValue() {
+	public String calculatePresentValue() {
 	    CurrencyAmount computedTrade = TRADE_PRICER.presentValue(TRADE, PROVIDER);
 	    CurrencyAmount computedProduct = PRODUCT_PRICER.presentValue(PRODUCT, PROVIDER);
 	    CurrencyAmount pvPayment =
 	    PRICER_NOMINAL.presentValue(UPFRONT_PAYMENT, ZeroRateDiscountFactors.of(EUR, VAL_DATE, CURVE_REPO));
-	   
-	    System.out.println("Present Values ->");
-	    System.out.println("Computed Trade - "+computedTrade.getCurrency()+" : "+computedTrade.getAmount());
-	    System.out.println("Computed Product - "+computedProduct.getCurrency()+" : "+computedProduct.getAmount());
-	    System.out.println("Pv Payment - "+pvPayment.getCurrency()+" : "+pvPayment.getAmount()); 
+	    
+	    String str = "";
+	    str+="\nPresent Values ->";
+	    str+="\nComputed Trade - "+computedTrade.getCurrency()+" : "+computedTrade.getAmount();
+	    str+="\nComputed Product - "+computedProduct.getCurrency()+" : "+computedProduct.getAmount();
+	    str+="\nPv Payment - "+pvPayment.getCurrency()+" : "+pvPayment.getAmount();
+	    
+	    return str;
 	}
 	  
 	  

@@ -36,7 +36,7 @@
 	</plugin>
 </plugins>-->
 
-<finalName>openStarata</finalName>
+<finalName>openStrata</finalName>
 		<plugins>
 
 			<!-- download source code in Eclipse, best practice -->

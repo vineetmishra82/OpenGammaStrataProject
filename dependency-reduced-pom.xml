@@ -6,7 +6,7 @@
   <name>OpenGammaStrataProcessing</name>
   <version>0.0.1-SNAPSHOT</version>
   <build>
-    <finalName>openStarata</finalName>
+    <finalName>openStrata</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-eclipse-plugin</artifactId>

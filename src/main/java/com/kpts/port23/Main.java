@@ -1,7 +1,9 @@
 package com.kpts.port23;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +64,7 @@ public class Main {
 		{
 			System.out.println("File uploaded....");
 			int lineNo = 1;
+			StringBuilder data = new StringBuilder("");
 			for (Map<String,String> item : itemList) {
 				
 				Product product = new 
@@ -81,20 +84,29 @@ public class Main {
 				
 				System.out.println("Loop size is "+loopSize);
 				
+				
+				
 				for(int i = 0;i<loopSize;i++)
 				{
-					System.out.println("For row - "+lineNo+" running count - "+(i+1));
-					product.calculatePresentValue();					
-					System.out.println("\n");	
+					data.append("\nFor row - "+lineNo+" running count - "+(i+1));
+					data.append(product.calculatePresentValue());					
+					data.append("\n");	
 				}
 				
 				lineNo++;
-				System.out.println("\n");	
+				data.append("\n");	
 				
 			}
+		
+			//Writing to file
+			System.out.println("Result data being written to a file...");
+			BufferedWriter buff = new BufferedWriter(new FileWriter("resultData.txt"));
 			
+			buff.write(data.toString());
 			
+			System.out.println("Result data written to file -> resultData.txt");
 			
+			buff.close();
 			
 		}
 		
