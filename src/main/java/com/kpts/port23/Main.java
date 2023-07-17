@@ -1,10 +1,15 @@
 package com.kpts.port23;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -78,8 +83,15 @@ public class Main {
 			
 		}
 		
-		if(itemList.size()>0)
+		if(itemList.size()>0)			
 		{
+			File file = new File("resultData.txt");
+			
+			PrintWriter writer = new PrintWriter(file);
+			writer.print("");
+			writer.close();
+			
+			
 			 long start = System.currentTimeMillis();
 			 
 			 ProcessComputationOfData(itemList);
@@ -105,6 +117,8 @@ public class Main {
 		}
 		
 		buffReader.close();
+		
+	
 		
 	} catch (FileNotFoundException e) {
 		// TODO Auto-generated catch block
@@ -157,31 +171,32 @@ public class Main {
 			lineNo++;
 			data.append("\n");	
 			
+			BufferedWriter buff;
+			try {
+				buff = new BufferedWriter(new FileWriter("resultData.txt",true));
+			
+			
+			buff.write(data.toString());
+				
+			buff.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
 		}
 	
 		 
 				
 		//Writing to file
 		System.out.println("Result data being written to a file...");
-		BufferedWriter buff;
-		try {
-			buff = new BufferedWriter(new FileWriter("resultData.txt"));
-		
-		
-		buff.write(data.toString());
-		
 		System.out.println("Result data written to file -> resultData.txt");
 		
 		long end =  System.currentTimeMillis();
 		 
-		 System.out.println("\n\nTotal time(only process and file writing not reading) -> "+(end-start)+" milliseconds\n");
+		System.out.println("\n\nTotal time(only process and file writing not reading) -> "+(end-start)+" milliseconds\n");
 		
-		
-		buff.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 	}
 
