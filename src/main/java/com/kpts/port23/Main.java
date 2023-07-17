@@ -70,18 +70,27 @@ public class Main {
 		
 		if(itemList.size()>0)
 		{
-				
-			TaskGraph taskGraph = new TaskGraph("s0")
-			.task("t0",Main::ProcessComputationOfData,itemList);
-			
-			 // Create an immutable task-graph
-	        ImmutableTaskGraph immutableTaskGraph = taskGraph.snapshot();
-
-	        // Create an execution plan from an immutable task-graph
-	        TornadoExecutionPlan executionPlan = new TornadoExecutionPlan(immutableTaskGraph);
-
-	        // Execute the execution plan
-	        TornadoExecutionResult executionResult = executionPlan.execute();
+			 long start = System.currentTimeMillis();
+			 
+			 ProcessComputationOfData(itemList);
+			 
+			 long end =  System.currentTimeMillis();
+			 
+			 System.out.println("Total time -> "+(end-start)+" milliseconds");
+		
+//			TaskGraph taskGraph = new TaskGraph("s0")
+//			.transferToDevice(DataTransferMode.FIRST_EXECUTION,itemList)
+//			.task("t0",Main::ProcessComputationOfData,itemList)
+//			.transferToHost(DataTransferMode.EVERY_EXECUTION);
+//			
+//			 // Create an immutable task-graph
+//	        ImmutableTaskGraph immutableTaskGraph = taskGraph.snapshot();
+//
+//	        // Create an execution plan from an immutable task-graph
+//	        TornadoExecutionPlan executionPlan = new TornadoExecutionPlan(immutableTaskGraph);
+//
+//	        // Execute the execution plan
+//	        TornadoExecutionResult executionResult = executionPlan.execute();
 			
 		}
 		
