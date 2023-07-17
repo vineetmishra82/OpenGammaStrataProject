@@ -138,7 +138,7 @@ public class Main {
 	private static void ProcessComputationOfData(List<Map<String, String>> itemList) {
 		System.out.println("File uploaded....");
 		int lineNo = 1;
-		StringBuilder data = new StringBuilder("");
+		
 		
 		 long start = System.currentTimeMillis();
 		 
@@ -160,7 +160,7 @@ public class Main {
 			
 			double loopSize = loopCount==-1 ? Integer.valueOf(item.get("Loops")) : loopCount;
 						
-					
+			StringBuilder data = new StringBuilder("");		
 			for(@Parallel double i = 0;i<loopSize;i++)
 			{
 				data.append("\nFor row - "+lineNo+" running count - "+(i+1));
@@ -179,6 +179,7 @@ public class Main {
 			buff.write(data.toString());
 				
 			buff.close();
+			
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -190,7 +191,6 @@ public class Main {
 		 
 				
 		//Writing to file
-		System.out.println("Result data being written to a file...");
 		System.out.println("Result data written to file -> resultData.txt");
 		
 		long end =  System.currentTimeMillis();
