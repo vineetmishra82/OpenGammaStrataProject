@@ -20,6 +20,7 @@ import uk.ac.manchester.tornado.api.enums.DataTransferMode;
 public class Main {
 	
 	static List<String> headers = new ArrayList<String>();
+	static double loopCount = -1;
 	
 
 	public static void main(String[] args) {
@@ -29,6 +30,15 @@ public class Main {
 	
 	try {
 		FileReader fileReader = new FileReader(args[0]);
+		
+		if(!args[1].equals(null))
+		{
+			loopCount = Double.valueOf(args[1]);
+			System.out.println("Per row loop count is "+loopCount);
+		}
+		else {
+			System.out.println("No loop count provided in argument, so per line loop will be taken into consideration.");
+		}
 		
 		if(fileReader!=null)
 		System.out.println("File found..start processing.. ");
@@ -104,6 +114,10 @@ public class Main {
 		// TODO Auto-generated catch block
 	System.out.println("File reading error - "+e.getLocalizedMessage());
 	}
+	catch(NumberFormatException e)
+	{
+		loopCount = -1;
+	}
 
 	}
 
@@ -111,6 +125,9 @@ public class Main {
 		System.out.println("File uploaded....");
 		int lineNo = 1;
 		StringBuilder data = new StringBuilder("");
+		
+		 long start = System.currentTimeMillis();
+		 
 		for (@Parallel Map<String,String> item : itemList) {
 			
 			Product product = new 
@@ -126,13 +143,11 @@ public class Main {
 							item.get("VAL_DATE")
 							);
 			
-			int loopSize = Integer.valueOf(item.get("Loops"));
 			
-			System.out.println("Loop size is "+loopSize);
-			
-			
-			
-			for(@Parallel int i = 0;i<loopSize;i++)
+			double loopSize = loopCount==-1 ? Integer.valueOf(item.get("Loops")) : loopCount;
+						
+					
+			for(@Parallel double i = 0;i<loopSize;i++)
 			{
 				data.append("\nFor row - "+lineNo+" running count - "+(i+1));
 				data.append(product.calculatePresentValue());					
@@ -144,6 +159,12 @@ public class Main {
 			
 		}
 	
+		 
+		 long end =  System.currentTimeMillis();
+		 
+		 System.out.println("\n\nTotal time(only process not file reading/writing) -> "+(end-start)+" milliseconds\n");
+		
+		
 		//Writing to file
 		System.out.println("Result data being written to a file...");
 		BufferedWriter buff;
