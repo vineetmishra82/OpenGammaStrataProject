@@ -163,27 +163,30 @@ public class Main {
 			StringBuilder data = new StringBuilder("");		
 			for(@Parallel double i = 0;i<loopSize;i++)
 			{
-				data.append("\nFor row - "+lineNo+" running count - "+(i+1));
-				data.append(product.calculatePresentValue());					
-				data.append("\n");	
+				product.calculatePresentValue();
+//				data.append("\nFor row - "+lineNo+" running count - "+(i+1));
+//				data.append(product.calculatePresentValue());					
+//				data.append("\n");	
 			}
+			
+			System.out.println("Processed Row "+lineNo+" for "+loopSize+" times.\n");
 			
 			lineNo++;
-			data.append("\n");	
-			
-			BufferedWriter buff;
-			try {
-				buff = new BufferedWriter(new FileWriter("resultData.txt",true));
-			
-			
-			buff.write(data.toString());
-				
-			buff.close();
-			
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			data.append("\n");	
+//			
+//			BufferedWriter buff;
+//			try {
+//				buff = new BufferedWriter(new FileWriter("resultData.txt",true));
+//			
+//			
+//			buff.write(data.toString());
+//				
+//			buff.close();
+//			
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 			
 			
 		}
@@ -191,12 +194,12 @@ public class Main {
 		 
 				
 		//Writing to file
-		System.out.println("Result data written to file -> resultData.txt");
+//		System.out.println("Result data written to file -> resultData.txt");
 		
 		long end =  System.currentTimeMillis();
 		 
-		System.out.println("\n\nTotal time(only process and file writing not reading) -> "+(end-start)+" milliseconds\n");
-		
+//		System.out.println("\n\nTotal time(only process and file writing not reading) -> "+(end-start)+" milliseconds\n");
+		System.out.println("\n\nTotal time(only process and not file writing or reading) -> "+(end-start)+" milliseconds\n");
 		
 	}
 
