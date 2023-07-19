@@ -105,7 +105,7 @@ public class Main {
 	        // Execute the execution plan
 	        executionPlan.execute();
 	        
-	        ProcessComputationOfData(itemList);
+	     //   ProcessComputationOfData(itemList);
 			 
 			 long end =  System.currentTimeMillis();
 			 System.out.println("Total time -> "+(end-start)+" milliseconds");
@@ -137,54 +137,65 @@ public class Main {
 		
 		 long start = System.currentTimeMillis();
 		 
-		for (@Parallel Map<String,String> item : itemList) {
-			
-			Product product = new 
-					Product(item.get("SECURITY_SCHEME")+","+item.get("SECURITY_VALUE"),
-							item.get("SECURITY_SCHEME")+","+item.get("ISSUER_VALUE"),
-							Long.valueOf(item.get("QUANTITY").replace("L", "")),
-							Double.valueOf(item.get("NOTIONAL")),
-							Double.valueOf(item.get("FIXED_RATE")),
-							item.get("START_DATE"),
-							item.get("END_DATE"),
-							item.get("SETTLEMENT"),
-							Double.valueOf(item.get("CLEAN_PRICE")),
-							item.get("VAL_DATE")
-							);
-			
-			
-			double loopSize = loopCount==-1 ? Integer.valueOf(item.get("Loops")) : loopCount;
-						
-			StringBuilder data = new StringBuilder("");		
-			for(@Parallel double i = 0;i<loopSize;i++)
-			{
-				product.calculatePresentValue();
-//				data.append("\nFor row - "+lineNo+" running count - "+(i+1));
-//				data.append(product.calculatePresentValue());					
-//				data.append("\n");	
-			}
-			
-			System.out.println("Processed Row "+lineNo+" for "+loopSize+" times.\n");
-			
-			lineNo++;
-//			data.append("\n");	
+		 
+		 for(@Parallel int i=0;i<10000;i++ )
+		 {
+			 System.out.println("i is "+i);
+			 
+			 for(@Parallel int j = 0;j<10000;j++)
+			 {
+				 System.out.println("j is "+j); 
+			 }
+		 }
+		 
+//		for (@Parallel Map<String,String> item : itemList) {
 //			
-//			BufferedWriter buff;
-//			try {
-//				buff = new BufferedWriter(new FileWriter("resultData.txt",true));
+//			Product product = new 
+//					Product(item.get("SECURITY_SCHEME")+","+item.get("SECURITY_VALUE"),
+//							item.get("SECURITY_SCHEME")+","+item.get("ISSUER_VALUE"),
+//							Long.valueOf(item.get("QUANTITY").replace("L", "")),
+//							Double.valueOf(item.get("NOTIONAL")),
+//							Double.valueOf(item.get("FIXED_RATE")),
+//							item.get("START_DATE"),
+//							item.get("END_DATE"),
+//							item.get("SETTLEMENT"),
+//							Double.valueOf(item.get("CLEAN_PRICE")),
+//							item.get("VAL_DATE")
+//							);
 //			
 //			
-//			buff.write(data.toString());
-//				
-//			buff.close();
-//			
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
+//			double loopSize = loopCount==-1 ? Integer.valueOf(item.get("Loops")) : loopCount;
+//						
+//			StringBuilder data = new StringBuilder("");		
+//			for(@Parallel double i = 0;i<loopSize;i++)
+//			{
+//				product.calculatePresentValue();
+////				data.append("\nFor row - "+lineNo+" running count - "+(i+1));
+////				data.append(product.calculatePresentValue());					
+////				data.append("\n");	
 //			}
-			
-			
-		}
+//			
+//			System.out.println("Processed Row "+lineNo+" for "+loopSize+" times.\n");
+//			
+//			lineNo++;
+////			data.append("\n");	
+////			
+////			BufferedWriter buff;
+////			try {
+////				buff = new BufferedWriter(new FileWriter("resultData.txt",true));
+////			
+////			
+////			buff.write(data.toString());
+////				
+////			buff.close();
+////			
+////			} catch (IOException e) {
+////				// TODO Auto-generated catch block
+////				e.printStackTrace();
+////			}
+//			
+//			
+//		}
 	
 		 
 				
