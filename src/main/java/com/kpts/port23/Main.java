@@ -88,14 +88,7 @@ public class Main {
 		
 		if(itemList.size()>0)			
 		{
-			File file = new File("resultData.txt");
-			
-			PrintWriter writer = new PrintWriter(file);
-			writer.print("");
-			writer.close();
-			
-			
-			 long start = System.currentTimeMillis();			
+			long start = System.currentTimeMillis();			
 		
 			 
 			TaskGraph taskGraph = new TaskGraph("s0")
