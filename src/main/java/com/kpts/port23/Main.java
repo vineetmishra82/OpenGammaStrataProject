@@ -103,7 +103,7 @@ public class Main {
 	        TornadoExecutionPlan executionPlan = new TornadoExecutionPlan(immutableTaskGraph);
 
 	        // Execute the execution plan
-	        TornadoExecutionResult executionResult = executionPlan.execute();
+	        executionPlan.execute();
 	        
 	        ProcessComputationOfData(itemList);
 			 
