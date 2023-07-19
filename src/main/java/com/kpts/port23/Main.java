@@ -20,6 +20,7 @@ import uk.ac.manchester.tornado.api.TaskGraph;
 import uk.ac.manchester.tornado.api.TornadoExecutionPlan;
 import uk.ac.manchester.tornado.api.TornadoExecutionResult;
 import uk.ac.manchester.tornado.api.annotations.Parallel;
+import uk.ac.manchester.tornado.api.common.TaskPackage;
 import uk.ac.manchester.tornado.api.enums.DataTransferMode;
 
 public class Main {
@@ -62,14 +63,15 @@ public class Main {
 					headers.add(string);
 					
 				}
-				count++;
-				
+								
 				System.out.println("headers size is "+headers.size());
 			}
 			
 			else if(values.length>0) {
 				
 				Map<String,String> item = new TreeMap<String, String>();
+				
+				item.put("RowNo",String.valueOf(count));
 				
 				for(int i = 0;i<headers.size();i++)
 				{
@@ -79,6 +81,7 @@ public class Main {
 				itemList.add(item);
 			}	
 			
+			count++;
 			
 			
 		}
@@ -92,28 +95,27 @@ public class Main {
 			writer.close();
 			
 			
-			 long start = System.currentTimeMillis();
+			 long start = System.currentTimeMillis();			
+		
 			 
-			 ProcessComputationOfData(itemList);
+			TaskGraph taskGraph = new TaskGraph("s0")
+			.transferToDevice(DataTransferMode.FIRST_EXECUTION,itemList)
+			.task("t0",Main::ProcessComputationOfData,itemList)
+			.transferToHost(DataTransferMode.EVERY_EXECUTION);
+			
+			 // Create an immutable task-graph
+	        ImmutableTaskGraph immutableTaskGraph = taskGraph.snapshot();
+
+	        // Create an execution plan from an immutable task-graph
+	        TornadoExecutionPlan executionPlan = new TornadoExecutionPlan(immutableTaskGraph);
+
+	        // Execute the execution plan
+	        TornadoExecutionResult executionResult = executionPlan.execute();
+	        
+	        ProcessComputationOfData(itemList);
 			 
 			 long end =  System.currentTimeMillis();
-			 
 			 System.out.println("Total time -> "+(end-start)+" milliseconds");
-		
-//			TaskGraph taskGraph = new TaskGraph("s0")
-//			.transferToDevice(DataTransferMode.FIRST_EXECUTION,itemList)
-//			.task("t0",Main::ProcessComputationOfData,itemList)
-//			.transferToHost(DataTransferMode.EVERY_EXECUTION);
-//			
-//			 // Create an immutable task-graph
-//	        ImmutableTaskGraph immutableTaskGraph = taskGraph.snapshot();
-//
-//	        // Create an execution plan from an immutable task-graph
-//	        TornadoExecutionPlan executionPlan = new TornadoExecutionPlan(immutableTaskGraph);
-//
-//	        // Execute the execution plan
-//	        TornadoExecutionResult executionResult = executionPlan.execute();
-			
 		}
 		
 		buffReader.close();
@@ -199,7 +201,7 @@ public class Main {
 		long end =  System.currentTimeMillis();
 		 
 //		System.out.println("\n\nTotal time(only process and file writing not reading) -> "+(end-start)+" milliseconds\n");
-		System.out.println("\n\nTotal time(only process and not file writing or reading) -> "+(end-start)+" milliseconds\n");
+		System.out.println("\n\nTotal time(only process and not file writing not reading) -> "+(end-start)+" milliseconds\n");
 		
 	}
 
