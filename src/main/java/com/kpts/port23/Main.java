@@ -92,9 +92,9 @@ public class Main {
 		
 			 
 			TaskGraph taskGraph = new TaskGraph("s0")
-			.transferToDevice(DataTransferMode.FIRST_EXECUTION,itemList)
+			
 			.task("t0",Main::ProcessComputationOfData,itemList)
-			.transferToHost(DataTransferMode.EVERY_EXECUTION);
+			;
 			
 			 // Create an immutable task-graph
 	        ImmutableTaskGraph immutableTaskGraph = taskGraph.snapshot();
